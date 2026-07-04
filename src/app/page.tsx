@@ -1,14 +1,19 @@
 /**
  * 首頁 — Hero + 引言 + 置頂作品。
  * Homepage — Hero + quote + pinned works.
+ *
+ * 文案從資料庫 SiteConfig 讀取，非 i18n 翻譯。
+ * Content read from database SiteConfig, not i18n translations.
  */
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { getSiteConfig } from "@/lib/siteConfig";
 
 export default async function HomePage() {
   const t = await getTranslations("home");
+  const config = await getSiteConfig();
 
   // 取得置頂作品
   const pinnedWorks = await prisma.work
@@ -24,10 +29,10 @@ export default async function HomePage() {
       {/* Hero 區域 */}
       <section className="flex min-h-[60vh] flex-col items-center justify-center text-center">
         <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl">
-          {t("name")}
+          {config.siteName}
         </h1>
         <p className="mt-4 text-lg text-base-content/70 sm:text-xl">
-          {t("slogan")}
+          {config.siteSlogan}
         </p>
         <p className="mt-6 max-w-2xl text-base text-base-content/60">
           {t("intro")}
@@ -38,7 +43,7 @@ export default async function HomePage() {
       <section className="my-16 flex justify-center">
         <blockquote className="relative max-w-2xl rounded-2xl border border-base-300/30 bg-base-200/30 px-8 py-6 text-center backdrop-blur-sm">
           <p className="text-lg font-medium italic text-base-content/80">
-            「{t("quote")}」
+            「{config.siteQuote}」
           </p>
         </blockquote>
       </section>
@@ -78,7 +83,7 @@ export default async function HomePage() {
                 <p className="mt-1 line-clamp-2 text-sm text-base-content/60">
                   {work.description}
                 </p>
-                {work.tags.length > 0 && (
+                {work.tags && Array.isArray(work.tags) && work.tags.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-1">
                     {work.tags.slice(0, 3).map((tag) => (
                       <span

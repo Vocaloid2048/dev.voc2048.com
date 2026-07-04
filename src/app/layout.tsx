@@ -2,16 +2,32 @@ import type { Metadata } from "next";
 import { getLocale, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { BackToTop } from "@/components/layout/BackToTop";
-import { CherryBlossom } from "@/components/effects/CherryBlossom";
+import { FrontendChrome } from "@/components/layout/FrontendChrome";
+import { getSiteConfig } from "@/lib/siteConfig";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "夜芷冰的星空夜談",
-  description: "变量为何要羡慕常数？让冷冰冰的软体，跳出窝心的温度。",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getSiteConfig();
+
+  const keywords = config.seoKeywords
+    ? (() => {
+        try {
+          return JSON.parse(config.seoKeywords) as string[];
+        } catch {
+          return [];
+        }
+      })()
+    : [];
+
+  return {
+    title: config.siteName || "夜芷冰的星空夜談",
+    description: config.siteSlogan || "變量為何要羨慕常數？讓冷冰冰的軟體，跳出窩心的溫度。",
+    keywords: keywords.length > 0 ? keywords : undefined,
+    icons: config.favicon
+      ? { icon: config.favicon, shortcut: config.favicon }
+      : undefined,
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -20,19 +36,39 @@ export default async function RootLayout({
 }) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const config = await getSiteConfig();
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
-            <CherryBlossom count={30} enabled={true} />
-            <Header />
-            <main className="relative z-10 min-h-screen pt-20">
+            {/* 套用自訂背景圖 */}
+            {config.background && (
+              <style>{`
+                body::before {
+                  content: "";
+                  position: fixed;
+                  inset: 0;
+                  z-index: -2;
+                  background-image: url(${config.background});
+                  background-size: cover;
+                  background-position: center;
+                  background-attachment: fixed;
+                  opacity: 0.15;
+                  pointer-events: none;
+                }
+              `}</style>
+            )}
+            <FrontendChrome
+              config={{
+                background: config.background,
+                cherryBlossomEnabled: config.cherryBlossomEnabled,
+                cherryBlossomCount: config.cherryBlossomCount,
+              }}
+            >
               {children}
-            </main>
-            <Footer />
-            <BackToTop />
+            </FrontendChrome>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
