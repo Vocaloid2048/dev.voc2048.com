@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -6,12 +9,9 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "dev.voc2048.com" },
       { protocol: "https", hostname: "ouob.voc2048.com" },
-      { protocol: "https", hostname: "localhost" },
+      { protocol: "http", hostname: "localhost" },
     ],
-  },
-  experimental: {
-    optimizePackageImports: ["lucide-react"],
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
