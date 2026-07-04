@@ -8,7 +8,7 @@
 
 - **框架**: Next.js 15 (App Router, 全棧)
 - **語言**: TypeScript 5
-- **資料庫**: PostgreSQL 16 + Prisma 6
+- **資料庫**: SQLite (本地開發) / PostgreSQL 16 (部署生產) + Prisma 6
 - **樣式**: TailwindCSS v4 + DaisyUI v5
 - **動畫**: Motion (Framer Motion) + Canvas 櫻花粒子
 - **i18n**: next-intl (繁中 + 英文)
