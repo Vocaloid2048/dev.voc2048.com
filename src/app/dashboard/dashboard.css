@@ -144,6 +144,31 @@
   border-top: 1px solid var(--db-border);
 }
 
+/* ===== 側邊欄導航捲動區 ===== */
+.dashboard-nav-scroll {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(242, 193, 195, 0.2) transparent;
+}
+
+/* WebKit / Chromium */
+.dashboard-nav-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dashboard-nav-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashboard-nav-scroll::-webkit-scrollbar-thumb {
+  background: rgba(242, 193, 195, 0.2);
+  border-radius: 9999px;
+}
+
+.dashboard-nav-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(242, 193, 195, 0.35);
+}
+
 /* ===== 語言切換器 ===== */
 .dashboard-lang-switch {
   background: rgba(242, 193, 195, 0.08);

@@ -9,6 +9,7 @@
  * - 強制深色微紋理背景（或讀取 assets/dashboard_image）
  * - 側邊欄含語言切換（獨立於前端）+ 登出
  * - 自動認證檢查 + Setup 重導
+ * - 導航區域可捲動，不覆蓋底部語言/登出按鈕
  */
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -148,30 +149,36 @@ export default function DashboardLayout({
       <DashboardBackground type="dashboard" />
 
       <div className="flex min-h-screen">
-        {/* 側邊欄 */}
-        <aside className="dashboard-sidebar sticky top-0 h-screen w-56 shrink-0 p-4">
-          <h2 className="mb-6 px-2 text-lg font-bold text-[var(--db-text)]">
-            {locale === "zh-TW" ? "後台管理" : "Admin Panel"}
-          </h2>
+        {/* 側邊欄 — flex-col 佈局，導航區可捲動，底部固定 */}
+        <aside className="dashboard-sidebar sticky top-0 flex h-screen w-56 shrink-0 flex-col">
+          {/* 標題（固定不捲動） */}
+          <div className="shrink-0 p-4 pb-2">
+            <h2 className="px-2 text-lg font-bold text-[var(--db-text)]">
+              {locale === "zh-TW" ? "後台管理" : "Admin Panel"}
+            </h2>
+          </div>
 
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const active = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`dashboard-nav-item flex items-center gap-2 rounded-xl px-3 py-2 text-sm ${active ? "active" : ""}`}
-                >
-                  <item.icon size={16} />
-                  {item.label[locale]}
-                </Link>
-              );
-            })}
+          {/* 導航區（可捲動） */}
+          <nav className="dashboard-nav-scroll flex-1 overflow-y-auto px-4 py-2">
+            <div className="space-y-1">
+              {navItems.map((item) => {
+                const active = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`dashboard-nav-item flex items-center gap-2 rounded-xl px-3 py-2 text-sm ${active ? "active" : ""}`}
+                  >
+                    <item.icon size={16} />
+                    {item.label[locale]}
+                  </Link>
+                );
+              })}
+            </div>
           </nav>
 
-          {/* 底部：語言切換 + 登出 */}
-          <div className="absolute bottom-0 left-0 right-0 p-4">
+          {/* 底部：語言切換 + 登出（固定不捲動） */}
+          <div className="shrink-0 border-t border-[var(--db-border)] p-4">
             {/* 語言切換器（獨立於前端） */}
             <div className="mb-3">
               <div className="mb-1.5 flex items-center gap-1.5 px-2 text-xs text-[var(--db-text-muted)]">
@@ -203,7 +210,7 @@ export default function DashboardLayout({
         </aside>
 
         {/* 主內容區 */}
-        <main className="min-w-0 flex-1 p-6">
+        <main className="min-w-0 flex-1 overflow-y-auto p-6">
           {children}
         </main>
       </div>
