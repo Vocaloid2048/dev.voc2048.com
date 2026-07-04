@@ -1,0 +1,47 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: nightstar-app
+    ports:
+      - "3000:3000"    # HTTP (重定向到 HTTPS 或直接服務)
+      - "8443:8443"    # HTTPS (若有 SSL 憑證)
+    environment:
+      - DATABASE_URL=postgresql://nightstar:${DB_PASSWORD}@db:5432/nightstar
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=production
+      - SSL_CERT_PATH=/app/cert/fullchain.pem
+      - SSL_KEY_PATH=/app/cert/privkey.pem
+      - UPLOAD_DIR=/app/uploads
+      - BACKUP_DIR=/app/backups
+      - BACKUP_RETENTION_DAYS=14
+    volumes:
+      - ../uploads:/app/uploads
+      - ../backups:/app/backups
+      - ../cert:/app/cert:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: nightstar-db
+    environment:
+      - POSTGRES_USER=nightstar
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=nightstar
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nightstar"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
