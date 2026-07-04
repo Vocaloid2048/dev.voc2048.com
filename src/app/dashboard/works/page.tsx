@@ -6,7 +6,8 @@
  */
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Plus, Edit2, Trash2, Pin, ExternalLink, Github } from "lucide-react";
+import { Plus, Edit2, Trash2, Pin, ExternalLink } from "lucide-react";
+import { GithubIcon } from "@/components/icons/GithubIcon";
 
 interface Work {
   id: string;
@@ -133,7 +134,7 @@ export default function DashboardWorksPage() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-xs text-[var(--db-text-muted)] hover:text-[var(--db-text)]"
                     >
-                      <Github size={12} /> Repo
+                      <GithubIcon size={12} /> Repo
                     </a>
                   )}
                 </div>

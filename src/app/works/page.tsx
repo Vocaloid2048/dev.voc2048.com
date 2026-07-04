@@ -4,7 +4,8 @@
  */
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { GithubIcon } from "@/components/icons/GithubIcon";
 
 export default async function WorksPage() {
   const t = await getTranslations("works");
@@ -56,7 +57,7 @@ export default async function WorksPage() {
                 </p>
 
                 {/* 標籤 */}
-                {work.tags.length > 0 && (
+                {work.tags && Array.isArray(work.tags) && work.tags.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-1">
                     {work.tags.map((tag) => (
                       <span
@@ -89,7 +90,7 @@ export default async function WorksPage() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-xs text-base-content/50 transition-opacity hover:opacity-70"
                     >
-                      <GitBranch size={14} />
+                      <GithubIcon size={14} />
                       {t("repo")}
                     </a>
                   )}
