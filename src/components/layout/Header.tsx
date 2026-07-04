@@ -40,14 +40,13 @@ export function Header() {
   }, []);
 
   const isActive = (href: string) => {
-    const cleanPath = pathname.replace(`/${locale}`, "");
-    if (href === "/") return cleanPath === "" || cleanPath === "/";
-    return cleanPath.startsWith(href);
+    if (href === "/") return pathname === "" || pathname === "/";
+    return pathname.startsWith(href);
   };
 
   const switchLocale = (newLocale: string) => {
-    const newPath = pathname.replace(`/${locale}`, `/${newLocale}`);
-    window.location.href = newPath;
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    window.location.reload();
   };
 
   return (
@@ -61,7 +60,7 @@ export function Header() {
           {navItems.map((item) => (
             <Link
               key={item.key}
-              href={`/${locale}${item.href === "/" ? "" : item.href}`}
+              href={item.href}
               className="relative px-3 py-1.5 text-sm font-medium transition-colors rounded-full hover:text-primary"
             >
               {isActive(item.href) && (
