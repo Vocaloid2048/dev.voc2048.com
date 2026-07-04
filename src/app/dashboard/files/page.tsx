@@ -6,7 +6,7 @@
  */
 import { useState, useEffect, useCallback } from "react";
 import { Upload, Trash2, Copy, Check, FileText, Image as ImageIcon } from "lucide-react";
-import { formatFileSize } from "@/lib/utils";
+import { formatFileSize, formatDate } from "@/lib/utils";
 
 interface FileItem {
   id: string;
@@ -116,7 +116,7 @@ export default function DashboardFilesPage() {
                   {formatFileSize(file.size)} · {file.mimeType}
                 </p>
                 <p className="mt-0.5 text-xs text-[var(--db-text-muted)]">
-                  {new Date(file.uploadedAt).toLocaleDateString()}
+                  {formatDate(file.uploadedAt)}
                 </p>
 
                 <div className="mt-2 flex gap-1">

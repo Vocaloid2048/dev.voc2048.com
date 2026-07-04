@@ -44,6 +44,21 @@ export function generateStoredName(originalName: string): string {
 }
 
 /**
+ * 格式化日期為 YYYY/MM/DD 格式。
+ * Formats a date to YYYY/MM/DD format consistently to avoid hydration mismatch.
+ * @param date - 日期字串或 Date 物件 / Date string or Date object.
+ * @returns 格式化後的字串 / Formatted string.
+ */
+export function formatDate(date: string | Date): string {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}`;
+}
+
+/**
  * 取得客戶端 IP。
  * Gets the client IP from request headers.
  * @param headers - 請求標頭 / Request headers.

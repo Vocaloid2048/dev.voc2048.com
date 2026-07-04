@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { MarkdownRenderer } from "@/components/notes/MarkdownRenderer";
 import { TableOfContents } from "@/components/notes/TableOfContents";
 import { ReadingProgress } from "@/components/notes/ReadingProgress";
+import { formatDate } from "@/lib/utils";
 
 export default async function NoteDetailPage({
   params,
@@ -55,7 +56,7 @@ export default async function NoteDetailPage({
                 )}
                 <span>
                   · {t("publishedOn")}{" "}
-                  {new Date(note.publishedAt).toLocaleDateString()}
+                  {formatDate(note.publishedAt)}
                 </span>
                 <span>· {note.viewCount} {t("views")}</span>
               </div>
@@ -95,7 +96,7 @@ export default async function NoteDetailPage({
             {/* 版權聲明 */}
             <div className="mt-8 rounded-2xl border border-base-300/30 bg-base-200/20 p-4 text-center text-xs text-base-content/50">
               CC BY-NC-ND 4.0 · {t("publishedOn")}{" "}
-              {new Date(note.publishedAt).toLocaleDateString()}
+              {formatDate(note.publishedAt)}
             </div>
           </article>
 

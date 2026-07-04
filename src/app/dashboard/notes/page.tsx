@@ -7,6 +7,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Plus, Search, Edit2, Trash2, Pin } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 interface Note {
   id: string;
@@ -89,6 +90,7 @@ export default function DashboardNotesPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="搜尋標題或內容..."
+            suppressHydrationWarning
             className="dashboard-input w-full py-2 pl-10 pr-4 text-sm"
           />
         </div>
@@ -151,7 +153,7 @@ export default function DashboardNotesPage() {
                   </td>
                   <td className="px-4 py-2 text-[var(--db-text-muted)]">{note.viewCount}</td>
                   <td className="px-4 py-2 text-[var(--db-text-muted)]">
-                    {new Date(note.updatedAt).toLocaleDateString()}
+                    {formatDate(note.updatedAt)}
                   </td>
                   <td className="px-4 py-2">
                     <div className="flex justify-end gap-1">

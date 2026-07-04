@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Pin } from "lucide-react";
 import { useState, useTransition, useCallback } from "react";
+import { formatDate } from "@/lib/utils";
 
 interface NoteItem {
   id: string;
@@ -91,6 +92,7 @@ export function NotesListClient({
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             placeholder={t("search")}
+            suppressHydrationWarning
             className="w-full rounded-full border border-base-300/50 bg-base-200/30 py-2.5 pl-10 pr-4 text-sm outline-none transition-colors focus:border-primary/50 focus:bg-base-200/50"
           />
         </div>
@@ -206,7 +208,7 @@ export function NotesListClient({
                     {note.mood && (
                       <span>· {t(`moods.${note.mood}`)}</span>
                     )}
-                    <span>· {new Date(note.publishedAt).toLocaleDateString()}</span>
+                    <span>· {formatDate(note.publishedAt)}</span>
                     {note.tags.length > 0 && (
                       <span>· {note.tags.map((t) => `#${t}`).join(" ")}</span>
                     )}
