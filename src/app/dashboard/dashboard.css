@@ -1,0 +1,173 @@
+/**
+ * 後台儀表盤專屬深色背景樣式。
+ * Dashboard-specific dark background styles.
+ */
+@import "tailwindcss";
+
+/* ===== 後台深色背景容器 ===== */
+.dashboard-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: #1a1515;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+/* 若有自訂背景圖則覆蓋 */
+.dashboard-bg.has-image {
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay;
+}
+
+.dashboard-bg.has-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 21, 21, 0.92) 0%,
+    rgba(35, 26, 26, 0.88) 100%
+  );
+}
+
+/* ===== 後台配色（強制深色） ===== */
+.dashboard-root {
+  --db-bg: #1a1515;
+  --db-surface: #231a1a;
+  --db-surface-hover: #2a1f1f;
+  --db-border: rgba(242, 193, 195, 0.12);
+  --db-text: #f2e0dc;
+  --db-text-muted: rgba(242, 224, 220, 0.55);
+  --db-primary: #f2c1c3;
+  --db-primary-muted: rgba(242, 193, 195, 0.15);
+  --db-error: #c97a7a;
+  --db-success: #8CB99A;
+
+  color: var(--db-text);
+  background: var(--db-bg);
+}
+
+/* ===== 後台側邊欄 ===== */
+.dashboard-sidebar {
+  background: rgba(35, 26, 26, 0.6);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid var(--db-border);
+}
+
+.dashboard-nav-item {
+  color: var(--db-text-muted);
+  transition: all 0.2s ease;
+}
+
+.dashboard-nav-item:hover {
+  background: rgba(242, 193, 195, 0.08);
+  color: var(--db-text);
+}
+
+.dashboard-nav-item.active {
+  background: var(--db-primary-muted);
+  color: var(--db-primary);
+  font-weight: 500;
+}
+
+/* ===== 後台卡片 ===== */
+.dashboard-card {
+  background: rgba(35, 26, 26, 0.5);
+  border: 1px solid var(--db-border);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+}
+
+.dashboard-card:hover {
+  border-color: rgba(242, 193, 195, 0.25);
+}
+
+/* ===== 後台表單 ===== */
+.dashboard-input {
+  background: rgba(26, 21, 21, 0.6);
+  border: 1px solid var(--db-border);
+  color: var(--db-text);
+  border-radius: 0.75rem;
+  transition: border-color 0.2s ease;
+}
+
+.dashboard-input:focus {
+  outline: none;
+  border-color: var(--db-primary);
+}
+
+.dashboard-input::placeholder {
+  color: rgba(242, 224, 220, 0.3);
+}
+
+/* ===== 後台按鈕 ===== */
+.dashboard-btn-primary {
+  background: var(--db-primary);
+  color: #2a1f1f;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.dashboard-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.dashboard-btn-primary:disabled {
+  opacity: 0.5;
+}
+
+.dashboard-btn-ghost {
+  background: transparent;
+  color: var(--db-text-muted);
+  border: 1px solid var(--db-border);
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.dashboard-btn-ghost:hover {
+  color: var(--db-text);
+  border-color: var(--db-primary);
+}
+
+/* ===== 後台表格 ===== */
+.dashboard-table th {
+  color: var(--db-text-muted);
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dashboard-table td {
+  border-top: 1px solid var(--db-border);
+}
+
+/* ===== 語言切換器 ===== */
+.dashboard-lang-switch {
+  background: rgba(242, 193, 195, 0.08);
+  border: 1px solid var(--db-border);
+  border-radius: 9999px;
+  padding: 0.25rem;
+  display: inline-flex;
+  gap: 0.125rem;
+}
+
+.dashboard-lang-switch button {
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  color: var(--db-text-muted);
+  transition: all 0.2s ease;
+}
+
+.dashboard-lang-switch button.active {
+  background: var(--db-primary);
+  color: #2a1f1f;
+  font-weight: 500;
+}
+
+.dashboard-lang-switch button:not(.active):hover {
+  color: var(--db-text);
+}
