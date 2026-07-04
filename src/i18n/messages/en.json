@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "home": "Home",
+    "notes": "Notes",
+    "works": "Works",
+    "about": "About"
+  },
+  "home": {
+    "name": "Night Zhi Bing's Starry Sky Night Talk",
+    "slogan": "Why should variables envy constants?",
+    "quote": "Making cold software radiate heartfelt warmth",
+    "intro": "A developer searching for balance between variables and constants under the starry sky of code.",
+    "pinnedWorks": "Pinned Works",
+    "viewAll": "View All"
+  },
+  "notes": {
+    "title": "Notes",
+    "search": "Search articles...",
+    "category": "Category",
+    "tag": "Tag",
+    "mood": "Mood",
+    "all": "All",
+    "types": {
+      "DIARY": "Diary",
+      "ARTICLE": "Article",
+      "SENTENCE": "Sentence"
+    },
+    "moods": {
+      "happy": "Happy",
+      "calm": "Calm",
+      "anxious": "Anxious",
+      "sad": "Sad",
+      "excited": "Excited",
+      "thoughtful": "Thoughtful"
+    },
+    "noResults": "No matching articles found",
+    "readingTime": "Reading time",
+    "minRead": "min read",
+    "tableOfContents": "Table of Contents",
+    "backToTop": "Back to top",
+    "publishedOn": "Published on",
+    "views": "views"
+  },
+  "works": {
+    "title": "Works",
+    "demo": "Live Demo",
+    "repo": "Source Code",
+    "noWorks": "No works yet"
+  },
+  "about": {
+    "title": "About",
+    "bio": "Biography",
+    "skills": "Skills",
+    "contact": "Contact"
+  },
+  "footer": {
+    "copyright": "Night Zhi Bing's Starry Sky Night Talk",
+    "rights": "All rights reserved",
+    "license": "CC BY-NC-ND 4.0"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "back": "Back"
+  }
+}

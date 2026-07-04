@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "home": "首頁",
+    "notes": "隨筆",
+    "works": "作品",
+    "about": "關於"
+  },
+  "home": {
+    "name": "夜芷冰的星空夜談",
+    "slogan": "變量為何要羨慕常數？",
+    "quote": "讓冷冰冰的軟體，跳出窩心的溫度",
+    "intro": "一名開發者，在程式碼的星空下，尋找變量與常數之間的平衡。",
+    "pinnedWorks": "置頂作品",
+    "viewAll": "查看全部"
+  },
+  "notes": {
+    "title": "隨筆",
+    "search": "搜尋文章...",
+    "category": "類別",
+    "tag": "標籤",
+    "mood": "心情",
+    "all": "全部",
+    "types": {
+      "DIARY": "日記",
+      "ARTICLE": "長文",
+      "SENTENCE": "好句子"
+    },
+    "moods": {
+      "happy": "開心",
+      "calm": "平靜",
+      "anxious": "焦慮",
+      "sad": "難過",
+      "excited": "興奮",
+      "thoughtful": "沉思"
+    },
+    "noResults": "沒有找到符合的文章",
+    "readingTime": "閱讀時間",
+    "minRead": "分鐘",
+    "tableOfContents": "目錄",
+    "backToTop": "返回頂部",
+    "publishedOn": "發佈於",
+    "views": "次觀看"
+  },
+  "works": {
+    "title": "作品",
+    "demo": "線上 demo",
+    "repo": "原始碼",
+    "noWorks": "暫無作品"
+  },
+  "about": {
+    "title": "關於",
+    "bio": "個人簡介",
+    "skills": "技能棧",
+    "contact": "聯繫方式"
+  },
+  "footer": {
+    "copyright": "夜芷冰的星空夜談",
+    "rights": "未經授權，禁止轉載",
+    "license": "CC BY-NC-ND 4.0"
+  },
+  "theme": {
+    "light": "淺色",
+    "dark": "深色",
+    "system": "跟隨系統"
+  },
+  "common": {
+    "loading": "載入中...",
+    "error": "發生錯誤",
+    "back": "返回"
+  }
+}
