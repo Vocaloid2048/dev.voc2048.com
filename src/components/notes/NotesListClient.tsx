@@ -4,7 +4,7 @@
  * 隨筆列表客戶端元件 — 篩選、搜尋、分頁。
  * Notes list client component — filtering, search, pagination.
  */
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Pin } from "lucide-react";
@@ -32,7 +32,6 @@ interface NotesListClientProps {
   currentFilters: Record<string, string | undefined>;
   totalPages: number;
   currentPage: number;
-  locale: string;
 }
 
 export function NotesListClient({
@@ -43,9 +42,9 @@ export function NotesListClient({
   currentFilters,
   totalPages,
   currentPage,
-  locale,
 }: NotesListClientProps) {
   const t = useTranslations("notes");
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchValue, setSearchValue] = useState(currentFilters.search || "");
@@ -61,10 +60,10 @@ export function NotesListClient({
       }
       params.delete("page");
       startTransition(() => {
-        router.push(`/${locale}/notes?${params.toString()}`);
+        router.push(`/notes?${params.toString()}`);
       });
     },
-    [searchParams, router, locale]
+    [searchParams, router]
   );
 
   const handleSearch = (e: React.FormEvent) => {
@@ -180,7 +179,7 @@ export function NotesListClient({
           {notes.map((note) => (
             <Link
               key={note.id}
-              href={`/${locale}/notes/${note.slug}`}
+              href={`/notes/${note.slug}`}
               className="group block rounded-2xl border border-base-300/30 bg-base-200/20 p-4 transition-all hover:border-primary/30 hover:bg-base-200/40 hover:shadow-md"
             >
               <div className="flex items-start justify-between gap-3">
@@ -228,7 +227,7 @@ export function NotesListClient({
               onClick={() => {
                 const params = new URLSearchParams(searchParams.toString());
                 params.set("page", String(page));
-                router.push(`/${locale}/notes?${params.toString()}`);
+                router.push(`/notes?${params.toString()}`);
               }}
               className={`h-9 w-9 rounded-full text-sm transition-colors ${page === currentPage ? "bg-primary text-primary-content" : "hover:bg-base-200/50"}`}
             >
