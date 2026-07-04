@@ -7,13 +7,16 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
-import { User, Lock, Mail, Image as ImageIcon, Globe, Tag, FileImage, Sparkles } from "lucide-react";
+import { User, Lock, Mail, Image as ImageIcon, Globe, Tag, FileImage, Sparkles, Plus, X, Upload } from "lucide-react";
 
 export default function SetupPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [checking, setChecking] = useState(true);
+  const [uploadingFavicon, setUploadingFavicon] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [faviconError, setFaviconError] = useState("");
 
   // 檢查是否已有管理員帳號
   useEffect(() => {
@@ -32,7 +35,6 @@ export default function SetupPage() {
   const [form, setForm] = useState({
     siteName: "夜芷冰的星空夜談",
     siteSlogan: "變量為何要羨慕常數？",
-    seoDescription: "",
     favicon: "",
     avatar: "",
     username: "",
@@ -40,6 +42,75 @@ export default function SetupPage() {
     password: "",
     confirmPassword: "",
   });
+
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywordInput, setKeywordInput] = useState("");
+
+  /** 新增關鍵詞。 */
+  const addKeyword = () => {
+    const kw = keywordInput.trim();
+    if (kw && !keywords.includes(kw)) {
+      setKeywords([...keywords, kw]);
+      setKeywordInput("");
+    }
+  };
+
+  /** 移除關鍵詞。 */
+  const removeKeyword = (index: number) => {
+    setKeywords(keywords.filter((_, i) => i !== index));
+  };
+
+  /** Favicon 上傳 — 限制 500x500。 */
+  const handleFaviconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setFaviconError("");
+
+    const img = new window.Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = async () => {
+      URL.revokeObjectURL(objectUrl);
+      if (img.width > 500 || img.height > 500) {
+        setFaviconError(`圖片尺寸為 ${img.width}x${img.height}，超過 500x500 限制`);
+        return;
+      }
+      setUploadingFavicon(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        if (res.ok) {
+          const data = await res.json();
+          setForm({ ...form, favicon: data.url });
+        }
+      } finally {
+        setUploadingFavicon(false);
+      }
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      setFaviconError("無法讀取圖片檔案");
+    };
+    img.src = objectUrl;
+  };
+
+  /** 頭像上傳。 */
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingAvatar(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      if (res.ok) {
+        const data = await res.json();
+        setForm({ ...form, avatar: data.url });
+      }
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,7 +133,10 @@ export default function SetupPage() {
       const res = await fetch("/api/auth/setup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          seoKeywords: JSON.stringify(keywords),
+        }),
       });
 
       const data = await res.json();
@@ -128,21 +202,64 @@ export default function SetupPage() {
               required
             />
 
-            <Field
-              icon={<FileImage size={16} />}
-              label="搜尋引擎描述 (SEO)"
-              value={form.seoDescription}
-              onChange={(v) => setForm({ ...form, seoDescription: v })}
-              placeholder="出現在搜尋結果中的網站描述"
-            />
+            {/* 搜尋關鍵詞 — Chip (+) */}
+            <div>
+              <label className="mb-1 block text-xs text-base-content/60">搜尋關鍵詞</label>
+              <div className="mb-2 flex gap-2">
+                <input
+                  type="text"
+                  value={keywordInput}
+                  onChange={(e) => setKeywordInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addKeyword();
+                    }
+                  }}
+                  placeholder="輸入關鍵詞後按 Enter"
+                  className="w-full rounded-xl border border-base-300/50 bg-base-100/50 py-2.5 px-4 text-sm outline-none transition-colors focus:border-primary/50"
+                />
+                <button
+                  type="button"
+                  onClick={addKeyword}
+                  className="flex items-center gap-1 rounded-xl border border-base-300/50 px-3 py-2.5 text-sm transition-colors hover:border-primary/50"
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
+              {keywords.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {keywords.map((kw, i) => (
+                    <span
+                      key={i}
+                      className="flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs text-primary"
+                    >
+                      {kw}
+                      <button type="button" onClick={() => removeKeyword(i)} className="hover:opacity-70">
+                        <X size={10} />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
 
-            <Field
-              icon={<ImageIcon size={16} />}
-              label="Favicon URL"
-              value={form.favicon}
-              onChange={(v) => setForm({ ...form, favicon: v })}
-              placeholder="/favicon.ico"
-            />
+            {/* Favicon 上傳 — 限制 500x500 */}
+            <div>
+              <label className="mb-1 block text-xs text-base-content/60">Favicon（限制 500x500）</label>
+              <div className="flex items-center gap-3">
+                {form.favicon && (
+                  <img src={form.favicon} alt="favicon" className="h-10 w-10 rounded-lg border border-base-300/50 object-cover" />
+                )}
+                <label className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-base-300/50 px-4 py-2 text-sm transition-colors hover:border-primary/50">
+                  <ImageIcon size={14} /> {uploadingFavicon ? "上傳中..." : "上傳"}
+                  <input type="file" accept="image/*" onChange={handleFaviconUpload} className="hidden" />
+                </label>
+              </div>
+              {faviconError && (
+                <p className="mt-1 text-xs text-error">{faviconError}</p>
+              )}
+            </div>
           </div>
 
           {/* 管理員帳號區 */}
@@ -151,13 +268,19 @@ export default function SetupPage() {
               管理員帳號
             </p>
 
-            <Field
-              icon={<ImageIcon size={16} />}
-              label="管理員頭像 URL"
-              value={form.avatar}
-              onChange={(v) => setForm({ ...form, avatar: v })}
-              placeholder="https://..."
-            />
+            {/* 管理員頭像上傳 */}
+            <div>
+              <label className="mb-1 block text-xs text-base-content/60">管理員頭像</label>
+              <div className="flex items-center gap-3">
+                {form.avatar && (
+                  <img src={form.avatar} alt="avatar" className="h-10 w-10 rounded-full border border-base-300/50 object-cover" />
+                )}
+                <label className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-base-300/50 px-4 py-2 text-sm transition-colors hover:border-primary/50">
+                  <ImageIcon size={14} /> {uploadingAvatar ? "上傳中..." : "上傳"}
+                  <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
+                </label>
+              </div>
+            </div>
 
             <Field
               icon={<User size={16} />}

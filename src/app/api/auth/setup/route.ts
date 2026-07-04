@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       avatar,
       siteName,
       siteSlogan,
-      seoDescription,
+      seoKeywords,
       favicon,
     } = body;
 
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
       { key: "site.name", value: siteName || "夜芷冰的星空夜談", description: "網站名稱" },
       { key: "site.slogan", value: siteSlogan || "變量為何要羨慕常數？", description: "網站標語" },
       { key: "site.quote", value: "讓冷冰冰的軟體，跳出窩心的溫度", description: "首頁引言" },
-      { key: "site.seo_description", value: seoDescription || "", description: "搜尋引擎描述" },
+      { key: "site.seo_keywords", value: seoKeywords || "[]", description: "搜尋關鍵詞 (JSON 陣列)" },
       { key: "site.favicon", value: favicon || "", description: "網站 Favicon URL" },
       { key: "effects.cherry_blossom", value: "true", description: "櫻花動畫開關" },
       { key: "effects.cherry_blossom_count", value: "30", description: "櫻花花瓣數量" },

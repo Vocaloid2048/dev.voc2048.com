@@ -3,9 +3,12 @@
 /**
  * 系統設置頁 — 網站配置、背景圖、櫻花開關、備份管理。
  * System settings — site config, background, cherry blossom, backup management.
+ *
+ * 網站配置儲存後即時生效於前端（透過 getSiteConfig 服務端讀取）。
+ * Site config takes effect immediately on frontend (via getSiteConfig server-side).
  */
 import { useState, useEffect, useCallback } from "react";
-import { Save, Upload, Download, RotateCcw, Trash2, Plus } from "lucide-react";
+import { Save, Upload, Download, RotateCcw, Trash2, Plus, X, Image as ImageIcon } from "lucide-react";
 import { formatFileSize } from "@/lib/utils";
 
 interface Backup {
@@ -19,16 +22,27 @@ interface Backup {
 
 export default function DashboardSettingsPage() {
   const [config, setConfig] = useState<Record<string, string>>({});
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [keywordInput, setKeywordInput] = useState("");
   const [backups, setBackups] = useState<Backup[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingFavicon, setUploadingFavicon] = useState(false);
+  const [faviconError, setFaviconError] = useState("");
   const [restoring, setRestoring] = useState<string | null>(null);
 
   const fetchConfig = useCallback(async () => {
     const res = await fetch("/api/config");
     const data = await res.json();
     setConfig(data);
+    // 解析 SEO 關鍵詞
+    try {
+      const kw = data["site.seo_keywords"] ? JSON.parse(data["site.seo_keywords"]) : [];
+      setKeywords(Array.isArray(kw) ? kw : []);
+    } catch {
+      setKeywords([]);
+    }
   }, []);
 
   const fetchBackups = useCallback(async () => {
@@ -44,10 +58,15 @@ export default function DashboardSettingsPage() {
 
   const handleSave = async () => {
     setSaving(true);
+    // 將關鍵詞陣列序列化為 JSON 字串存入 config
+    const configToSave = {
+      ...config,
+      "site.seo_keywords": JSON.stringify(keywords),
+    };
     await fetch("/api/config", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(config),
+      body: JSON.stringify(configToSave),
     });
     setSaving(false);
     setSaved(true);
@@ -69,6 +88,57 @@ export default function DashboardSettingsPage() {
     } finally {
       setUploading(false);
     }
+  };
+
+  /** Favicon 上傳 — 限制 500x500，自動驗證尺寸。 */
+  const handleFaviconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setFaviconError("");
+
+    // 驗證圖片尺寸 (500x500)
+    const img = new window.Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = async () => {
+      URL.revokeObjectURL(objectUrl);
+      if (img.width > 500 || img.height > 500) {
+        setFaviconError(`圖片尺寸為 ${img.width}x${img.height}，超過 500x500 限制`);
+        return;
+      }
+
+      // 尺寸符合，上傳
+      setUploadingFavicon(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        if (res.ok) {
+          const data = await res.json();
+          setConfig({ ...config, "site.favicon": data.url });
+        }
+      } finally {
+        setUploadingFavicon(false);
+      }
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      setFaviconError("無法讀取圖片檔案");
+    };
+    img.src = objectUrl;
+  };
+
+  /** 新增關鍵詞。 */
+  const addKeyword = () => {
+    const kw = keywordInput.trim();
+    if (kw && !keywords.includes(kw)) {
+      setKeywords([...keywords, kw]);
+      setKeywordInput("");
+    }
+  };
+
+  /** 移除關鍵詞。 */
+  const removeKeyword = (index: number) => {
+    setKeywords(keywords.filter((_, i) => i !== index));
   };
 
   const handleBackup = async () => {
@@ -118,16 +188,85 @@ export default function DashboardSettingsPage() {
             value={config["site.quote"] || ""}
             onChange={(v) => setConfig({ ...config, "site.quote": v })}
           />
-          <ConfigInput
-            label="SEO 描述"
-            value={config["site.seo_description"] || ""}
-            onChange={(v) => setConfig({ ...config, "site.seo_description": v })}
-          />
-          <ConfigInput
-            label="Favicon URL"
-            value={config["site.favicon"] || ""}
-            onChange={(v) => setConfig({ ...config, "site.favicon": v })}
-          />
+
+          {/* 搜尋關鍵詞 — Chip (+) 方式添加 */}
+          <div>
+            <label className="mb-1 block text-xs text-[var(--db-text-muted)]">搜尋關鍵詞</label>
+            <div className="mb-2 flex gap-2">
+              <input
+                type="text"
+                value={keywordInput}
+                onChange={(e) => setKeywordInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addKeyword();
+                  }
+                }}
+                placeholder="輸入關鍵詞後按 Enter 或點擊 +"
+                className="dashboard-input flex-1 px-4 py-2 text-sm"
+              />
+              <button
+                onClick={addKeyword}
+                className="dashboard-btn-ghost flex items-center gap-1 px-4 py-2 text-sm"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+            {keywords.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {keywords.map((kw, i) => (
+                  <span
+                    key={i}
+                    className="flex items-center gap-1 rounded-full bg-[var(--db-primary-muted)] px-3 py-1 text-xs text-[var(--db-primary)]"
+                  >
+                    {kw}
+                    <button
+                      onClick={() => removeKeyword(i)}
+                      className="hover:opacity-70"
+                    >
+                      <X size={10} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Favicon 上傳 — 限制 500x500 */}
+          <div>
+            <label className="mb-1 block text-xs text-[var(--db-text-muted)]">
+              Favicon（限制 500x500）
+            </label>
+            <div className="flex items-center gap-3">
+              {config["site.favicon"] && (
+                <img
+                  src={config["site.favicon"]}
+                  alt="favicon"
+                  className="h-12 w-12 rounded-lg border border-[var(--db-border)] object-cover"
+                />
+              )}
+              <label className="dashboard-btn-ghost flex cursor-pointer items-center gap-1.5 px-4 py-2 text-sm">
+                <ImageIcon size={14} /> {uploadingFavicon ? "上傳中..." : "上傳 Favicon"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFaviconUpload}
+                  className="hidden"
+                />
+              </label>
+            </div>
+            {faviconError && (
+              <p className="mt-1 text-xs text-[var(--db-error)]">{faviconError}</p>
+            )}
+            <input
+              type="text"
+              value={config["site.favicon"] || ""}
+              onChange={(e) => setConfig({ ...config, "site.favicon": e.target.value })}
+              placeholder="或直接輸入圖片 URL"
+              className="dashboard-input mt-2 w-full px-4 py-2 text-sm"
+            />
+          </div>
         </div>
       </section>
 
@@ -192,7 +331,7 @@ export default function DashboardSettingsPage() {
         >
           <Save size={16} /> {saving ? "儲存中..." : "儲存設置"}
         </button>
-        {saved && <span className="text-sm text-[var(--db-success)]">已儲存</span>}
+        {saved && <span className="text-sm text-[var(--db-success)]">已儲存，重新整理前端即可看到變更</span>}
       </div>
 
       {/* 備份管理 */}
