@@ -1,0 +1,186 @@
+// 夜芷冰的星空夜談 — Prisma Schema
+// 依據 docs/agent/todo.md 中的資料庫設計
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 用戶與認證 ====================
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String // bcrypt hash
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notes Note[]
+  works Work[]
+  files File[]
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+// ==================== 筆記 (隨筆) ====================
+
+model Note {
+  id          String   @id @default(cuid())
+  title       String // 長文必填，日記/好句子可選
+  slug        String   @unique
+  content     String // Markdown 內容
+  excerpt     String? // 摘要
+  coverImage  String?
+  type        NoteType @default(ARTICLE)
+  mood        String? // 心情: happy/anxious/sad/calm/...
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  tags        Tag[]     @relation("NoteTags")
+  isPinned    Boolean   @default(false)
+  isPublished Boolean   @default(true)
+  viewCount   Int       @default(0)
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publishedAt DateTime  @default(now())
+
+  @@index([slug, type, isPublished, createdAt])
+  @@map("notes")
+}
+
+enum NoteType {
+  DIARY // 日記
+  ARTICLE // 長文
+  SENTENCE // 好句子
+}
+
+// ==================== 作品 ====================
+
+model Work {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  content     String? // Markdown 詳細描述
+  coverImage  String?
+  demoUrl     String?
+  repoUrl     String?
+  tags        String[] // ["React", "Next.js"]
+  isPinned    Boolean  @default(false)
+  isPublished Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, sortOrder])
+  @@map("works")
+}
+
+// ==================== 標籤與分類 ====================
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  color String? // hex color
+  notes Note[] @relation("NoteTags")
+
+  @@map("tags")
+}
+
+model Category {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+  notes       Note[]
+
+  @@map("categories")
+}
+
+// ==================== 訪問日誌 ====================
+
+model VisitLog {
+  id        String   @id @default(cuid())
+  ip        String
+  userAgent String?
+  path      String
+  referer   String?
+  country   String?
+  city      String?
+  lat       Float?
+  lng       Float?
+  timestamp DateTime @default(now())
+
+  @@index([timestamp, ip, path])
+  @@map("visit_logs")
+}
+
+// ==================== 檔案管理 ====================
+
+model File {
+  id         String   @id @default(cuid())
+  filename   String // 原始檔名
+  storedName String   @unique // UUID 檔名
+  mimeType   String
+  size       Int
+  url        String
+  path       String
+  width      Int?
+  height     Int?
+  uploaderId String
+  uploader   User     @relation(fields: [uploaderId], references: [id])
+  uploadedAt DateTime @default(now())
+
+  @@map("files")
+}
+
+// ==================== 網站配置 ====================
+
+model SiteConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String // JSON string
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("site_configs")
+}
+
+// ==================== 備份記錄 ====================
+
+model Backup {
+  id          String       @id @default(cuid())
+  filename    String       @unique // 備份識別名 (YYYY-MM-DD)
+  size        Int // 備份總大小 (bytes)
+  type        BackupType   @default(FULL)
+  status      BackupStatus @default(COMPLETED)
+  dbDumpPath  String? // pg_dump 檔案路徑
+  assetsPath  String? // uploads 壓縮檔路徑
+  triggeredBy String // "cron" | "manual"
+  createdAt   DateTime     @default(now())
+
+  @@index([createdAt, status])
+  @@map("backups")
+}
+
+enum BackupType {
+  FULL
+  PARTIAL
+}
+
+enum BackupStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
