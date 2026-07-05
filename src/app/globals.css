@@ -77,11 +77,21 @@
   --noise: 0;
 }
 
+/* 為確保 inline SVG 能正確讀取，顯式將 RGB 變量導出到主題類 */
+[data-theme="nightstar-light"] {
+  --color-primary-rgb: 217, 154, 165;
+}
+[data-theme="nightstar-dark"] {
+  --color-primary-rgb: 242, 193, 195;
+}
+
+
 /* ===== 全域樣式 ===== */
 :root {
   --font-sans: "Noto Sans TC", "Inter", system-ui, -apple-system, sans-serif;
   --font-serif: "Noto Serif TC", Georgia, serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --color-primary-rgb: 242, 193, 195;
 }
 
 body {
