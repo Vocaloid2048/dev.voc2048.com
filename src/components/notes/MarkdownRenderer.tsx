@@ -11,6 +11,9 @@ import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeSlug from "rehype-slug";
 import rehypeRaw from "rehype-raw";
 
+// 引入代碼高亮樣式 (Github Dark 主題)
+import "highlight.js/styles/github-dark.css";
+
 interface MarkdownRendererProps {
   content: string;
   className?: string;

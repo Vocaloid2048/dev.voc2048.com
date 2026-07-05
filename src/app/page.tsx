@@ -16,10 +16,24 @@ export default async function HomePage() {
   const t = await getTranslations("home");
   const config = await getSiteConfig();
 
+  // 處理積木數據
+  let blocks: any[] = [];
+  try {
+    if (config.homeBlocks) {
+      const parsed = JSON.parse(config.homeBlocks);
+      blocks = Array.isArray(parsed) ? parsed : [];
+    }
+  } catch (err) {
+    console.error("Failed to parse homeBlocks:", err);
+    blocks = [];
+  }
+
+
   // 處理文本替換
   const processText = (text: string) => {
     return text.replace(/\{name\}|<name_display>/g, config.nameDisplay);
   };
+
 
   // 取得管理員頭像
   const admin = await prisma.user.findFirst({
@@ -41,12 +55,56 @@ export default async function HomePage() {
       {/* Hero 區域 - 左右佈局 */}
       <section className="flex min-h-[80vh] flex-col-reverse items-center justify-between gap-12 py-12 lg:flex-row lg:py-0">
         <div className="flex-1 text-left">
-          <div className="hero-content">
-            <MarkdownRenderer 
-              content={processText(config.homeIntro)} 
-              className="prose-h1:text-3xl prose-h1:font-bold prose-h1:tracking-tight prose-h1:mb-2 sm:prose-h1:text-4xl md:prose-h1:text-5xl prose-h3:text-xl prose-h3:font-medium prose-h3:text-base-content/80 sm:prose-h3:text-2xl prose-p:text-lg prose-p:font-semibold prose-p:opacity-60"
-            />
+          <div className="flex flex-col gap-1">
+            {blocks.map((block: any) => (
+              <div key={block.id}>
+                {block.type === "heading" && (
+                  block.level === 1 ? (
+                    <h1 className="text-4xl font-extrabold tracking-tight sm:text-4xl md:text-4xl mb-4">
+                      {processText(block.content || "")}
+                    </h1>
+                  ) : block.level === 2 ? (
+                    <h2 className="text-2xl font-bold mb-3">
+                      {processText(block.content || "")}
+                    </h2>
+                  ) : (
+                    <h3 className="text-xl font-bold text-base-content/90 sm:text-xl mb-2">
+                      {processText(block.content || "")}
+                    </h3>
+                  )
+                )}
+                {block.type === "text" && (
+                  <p className="text-lg font-medium opacity-70 leading-relaxed whitespace-pre-wrap mb-4">
+                    {processText(block.content || "")}
+                  </p>
+                )}
+                {block.type === "chips" && (
+                  <div className="flex flex-wrap gap-2 mt-2 mb-4">
+                    {block.items?.map((item: string, i: number) => (
+                      <span key={i} className="inline-flex items-center rounded-full border border-base-300/30 bg-base-200/20 px-3 py-1 text-sm font-medium transition-all hover:border-primary/30">
+                        {processText(item)}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {block.type === "button" && (
+                  <div className="mt-6 mb-4">
+                    <Link 
+                      href={block.href || "/notes"}
+                      className="group flex w-fit items-center gap-2 rounded-full bg-primary px-8 py-3 text-base font-bold text-white shadow-lg transition-all hover:scale-105 hover:bg-primary/90"
+                    >
+                      {block.label}
+                      <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </div>
+                )}
+                {block.type === "spacer" && (
+                  <div style={{ height: `${block.height}px` }} />
+                )}
+              </div>
+            ))}
           </div>
+
 
           <div className="mt-16 max-w-lg border-l-2 border-primary/30 pl-6 italic text-base-content/50">
             <MarkdownRenderer 

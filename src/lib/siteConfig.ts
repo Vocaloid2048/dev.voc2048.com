@@ -15,10 +15,9 @@ export interface SiteConfig {
   bgGradientEnabled: boolean;
   cherryBlossomEnabled: boolean;
   cherryBlossomCount: number;
-  heroTitle: string;
-  heroSubtitle: string;
   heroJob: string;
   homeIntro: string;
+  homeBlocks: string; // JSON string for building blocks
   aboutBio: string;
 }
 
@@ -37,6 +36,12 @@ const DEFAULTS: SiteConfig = {
   heroSubtitle: "Hello ~ I'm Vocchi",
   heroJob: "跨平台應用程式開發者 From HK",
   homeIntro: "# 你好呀~ 我係 {name} 🎸\n### 跨平台應用程式開發者 From HK\n\nHello ~ I'm Vocchi",
+  homeBlocks: JSON.stringify([
+    { id: "1", type: "heading", content: "你好呀~ 我係 {name} 🎸", level: 1 },
+    { id: "2", type: "heading", content: "跨平台應用程式開發者 From HK", level: 3 },
+    { id: "3", type: "text", content: "Hello ~ I'm Vocchi" },
+    { id: "4", type: "chips", items: ["React", "Next.js", "TypeScript", "Kotlin"] },
+  ]),
   aboutBio: "",
 };
 
@@ -76,6 +81,7 @@ export async function getSiteConfig(): Promise<SiteConfig> {
       heroSubtitle: map["home.hero_subtitle"] || DEFAULTS.heroSubtitle,
       heroJob: map["home.hero_job"] || DEFAULTS.heroJob,
       homeIntro: map["home.intro"] || DEFAULTS.homeIntro,
+      homeBlocks: map["home.blocks"] || DEFAULTS.homeBlocks,
       aboutBio: map["about.bio"] || DEFAULTS.aboutBio,
     };
   } catch {
@@ -102,6 +108,7 @@ export function siteConfigToMap(config: SiteConfig): Record<string, string> {
     "home.hero_subtitle": config.heroSubtitle,
     "home.hero_job": config.heroJob,
     "home.intro": config.homeIntro,
+    "home.blocks": config.homeBlocks,
     "about.bio": config.aboutBio,
   };
 }
