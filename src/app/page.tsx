@@ -41,25 +41,10 @@ export default async function HomePage() {
       {/* Hero 區域 - 左右佈局 */}
       <section className="flex min-h-[80vh] flex-col-reverse items-center justify-between gap-12 py-12 lg:flex-row lg:py-0">
         <div className="flex-1 text-left">
-          <div className="space-y-4">
+          <div className="hero-content">
             <MarkdownRenderer 
-              content={processText(config.heroTitle)} 
-              className="prose-h1:text-3xl prose-h1:font-bold prose-h1:tracking-tight sm:prose-h1:text-4xl md:prose-h1:text-5xl prose-p:text-3xl prose-p:font-bold md:prose-p:text-5xl"
-            />
-            <MarkdownRenderer 
-              content={processText(config.heroJob)} 
-              className="prose-p:text-xl prose-p:font-medium prose-p:text-base-content/80 sm:prose-p:text-2xl"
-            />
-          </div>
-          
-          <div className="mt-8 space-y-1 opacity-60">
-            <MarkdownRenderer 
-              content={processText(config.heroSubtitle)} 
-              className="prose-p:text-lg prose-p:font-semibold"
-            />
-            <MarkdownRenderer 
-              content={processText(config.heroJob)} 
-              className="hidden" 
+              content={processText(config.homeIntro)} 
+              className="prose-h1:text-3xl prose-h1:font-bold prose-h1:tracking-tight prose-h1:mb-2 sm:prose-h1:text-4xl md:prose-h1:text-5xl prose-h3:text-xl prose-h3:font-medium prose-h3:text-base-content/80 sm:prose-h3:text-2xl prose-p:text-lg prose-p:font-semibold prose-p:opacity-60"
             />
           </div>
 
