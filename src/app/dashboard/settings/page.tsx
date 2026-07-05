@@ -190,27 +190,76 @@ export default function DashboardSettingsPage() {
           />
 
           <div className="border-t border-[var(--db-border)] pt-4 mt-4">
-            <h3 className="mb-3 text-sm font-medium text-[var(--db-text)]">Hero 區域配置</h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <ConfigInput
-                label="Hero 標題"
-                value={config["home.hero_title"] || ""}
-                onChange={(v) => setConfig({ ...config, "home.hero_title": v })}
-              />
-              <ConfigInput
-                label="Hero 副標題"
-                value={config["home.hero_subtitle"] || ""}
-                onChange={(v) => setConfig({ ...config, "home.hero_subtitle": v })}
-              />
-              <ConfigInput
-                label="職業描述"
-                value={config["home.hero_job"] || ""}
-                onChange={(v) => setConfig({ ...config, "home.hero_job": v })}
-              />
+            <h3 className="mb-3 text-sm font-medium text-[var(--db-text)]">Hero 區域配置 (HTML / Markdown)</h3>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <div className="space-y-4">
+                <ConfigTextarea
+                  label="Hero 標題"
+                  value={config["home.hero_title"] || ""}
+                  onChange={(v) => setConfig({ ...config, "home.hero_title": v })}
+                  rows={2}
+                  className="font-mono text-xs"
+                />
+                <ConfigTextarea
+                  label="Hero 副標題"
+                  value={config["home.hero_subtitle"] || ""}
+                  onChange={(v) => setConfig({ ...config, "home.hero_subtitle": v })}
+                  rows={2}
+                  className="font-mono text-xs"
+                />
+                <ConfigTextarea
+                  label="職業描述"
+                  value={config["home.hero_job"] || ""}
+                  onChange={(v) => setConfig({ ...config, "home.hero_job": v })}
+                  rows={2}
+                  className="font-mono text-xs"
+                />
+                <div className="rounded-lg bg-info/10 p-3 text-[10px] text-[var(--db-text-muted)]">
+                  <p className="font-bold mb-1 opacity-80">編輯提示：</p>
+                  <ul className="list-disc pl-4 space-y-0.5">
+                    <li>支援 HTML 標籤（如 &lt;span class="text-primary"&gt;...&lt;/span&gt;）</li>
+                    <li>使用 {"<name_display>"} 或 {"{name}"} 替換展示名稱</li>
+                    <li>換行將自動轉換為 &lt;br/&gt;</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* 實時預覽區域 */}
+              <div className="flex flex-col rounded-xl border border-[var(--db-border)] bg-black/20 overflow-hidden">
+                <div className="border-b border-[var(--db-border)] bg-white/5 px-4 py-2">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-[var(--db-text-muted)]">Live Preview</h4>
+                </div>
+                <div className="flex-1 p-6 space-y-4">
+                  <div className="space-y-2">
+                    <h1 
+                      className="text-2xl font-bold tracking-tight"
+                      dangerouslySetInnerHTML={{ 
+                        __html: (config["home.hero_title"] || "")
+                          .replace(/\{name\}|<name_display>/g, config["site.name_display"] || config["site.name"] || "Name")
+                          .replace(/\n/g, "<br/>") 
+                      }}
+                    />
+                    <p 
+                      className="text-lg font-medium opacity-80"
+                      dangerouslySetInnerHTML={{ 
+                        __html: (config["home.hero_job"] || "")
+                          .replace(/\n/g, "<br/>") 
+                      }}
+                    />
+                  </div>
+                  
+                  <div className="mt-8 space-y-1 opacity-60">
+                    <p 
+                      className="text-md font-semibold"
+                      dangerouslySetInnerHTML={{ 
+                        __html: (config["home.hero_subtitle"] || "")
+                          .replace(/\n/g, "<br/>") 
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            <p className="mt-2 text-xs text-[var(--db-text-muted)]">
-              標題中可使用 {"{name}"} 作為網站名稱的佔位符。
-            </p>
           </div>
 
           {/* 搜尋關鍵詞 — Chip (+) 方式添加 */}
@@ -450,10 +499,12 @@ function ConfigInput({
   label,
   value,
   onChange,
+  placeholder,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  placeholder?: string;
 }) {
   return (
     <div>
@@ -462,7 +513,35 @@ function ConfigInput({
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
         className="dashboard-input w-full px-4 py-2 text-sm"
+      />
+    </div>
+  );
+}
+
+/** 配置多行輸入欄位元件。 */
+function ConfigTextarea({
+  label,
+  value,
+  onChange,
+  rows = 3,
+  className = "",
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  rows?: number;
+  className?: string;
+}) {
+  return (
+    <div>
+      <label className="mb-1 block text-xs text-[var(--db-text-muted)]">{label}</label>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={rows}
+        className={`dashboard-input w-full px-4 py-2 text-sm resize-none ${className}`}
       />
     </div>
   );

@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 export interface SiteConfig {
   siteName: string;
   siteSlogan: string;
+  nameDisplay: string;
   siteQuote: string;
   seoKeywords: string; // JSON array string
   favicon: string;
@@ -50,6 +51,7 @@ export async function getSiteConfig(): Promise<SiteConfig> {
     return {
       siteName: map["site.name"] || DEFAULTS.siteName,
       siteSlogan: map["site.slogan"] || DEFAULTS.siteSlogan,
+      nameDisplay: map["site.name_display"] || DEFAULTS.nameDisplay,
       siteQuote: map["site.quote"] || DEFAULTS.siteQuote,
       seoKeywords: map["site.seo_keywords"] || DEFAULTS.seoKeywords,
       favicon: map["site.favicon"] || DEFAULTS.favicon,

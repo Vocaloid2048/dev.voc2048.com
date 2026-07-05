@@ -15,6 +15,13 @@ export default async function HomePage() {
   const t = await getTranslations("home");
   const config = await getSiteConfig();
 
+  // 處理文本替換與 HTML 渲染
+  const processText = (text: string) => {
+    return text
+      .replace(/\{name\}|<name_display>/g, config.nameDisplay)
+      .replace(/\n/g, "<br/>");
+  };
+
   // 取得管理員頭像
   const admin = await prisma.user.findFirst({
     where: { role: "ADMIN" },
@@ -36,25 +43,32 @@ export default async function HomePage() {
       <section className="flex min-h-[80vh] flex-col-reverse items-center justify-between gap-12 py-12 lg:flex-row lg:py-0">
         <div className="flex-1 text-left">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-              {config.heroTitle.replace("{name}", config.siteName.replace("夜芷冰的星空夜談", "Voc-夜芷冰"))}
-            </h1>
-            <p className="text-xl font-medium text-base-content/80 sm:text-2xl">
-              {config.heroJob}
-            </p>
+            <h1 
+              className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
+              dangerouslySetInnerHTML={{ __html: processText(config.heroTitle) }}
+            />
+            <p 
+              className="text-xl font-medium text-base-content/80 sm:text-2xl"
+              dangerouslySetInnerHTML={{ __html: processText(config.heroJob) }}
+            />
           </div>
           
           <div className="mt-8 space-y-1 opacity-60">
-            <p className="text-lg font-semibold">{config.heroSubtitle}</p>
-            <p className="text-sm font-medium uppercase tracking-widest">
-              {config.heroJob}
-            </p>
+            <p 
+              className="text-lg font-semibold"
+              dangerouslySetInnerHTML={{ __html: processText(config.heroSubtitle) }}
+            />
+            <p 
+              className="text-sm font-medium uppercase tracking-widest"
+              dangerouslySetInnerHTML={{ __html: processText(config.heroJob) }}
+            />
           </div>
 
           <div className="mt-16 max-w-lg border-l-2 border-primary/30 pl-6 italic text-base-content/50">
-            <p className="text-sm">
-              {config.siteQuote}
-            </p>
+            <p 
+              className="text-sm"
+              dangerouslySetInnerHTML={{ __html: processText(config.siteQuote) }}
+            />
           </div>
         </div>
 
