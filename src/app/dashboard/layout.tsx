@@ -22,12 +22,14 @@ import {
   Settings,
   LogOut,
   Languages,
+  Info,
 } from "lucide-react";
 import "./dashboard.css";
 
 /** 側邊欄導航項目（雙語）。 */
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: { "zh-TW": "儀表盤", en: "Dashboard" } },
+  { href: "/dashboard/info", icon: Info, label: { "zh-TW": "資訊設定", en: "Information" } },
   { href: "/dashboard/notes", icon: FileText, label: { "zh-TW": "筆記管理", en: "Notes" } },
   { href: "/dashboard/works", icon: FolderGit2, label: { "zh-TW": "作品管理", en: "Works" } },
   { href: "/dashboard/files", icon: Upload, label: { "zh-TW": "檔案管理", en: "Files" } },
