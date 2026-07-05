@@ -1,7 +1,11 @@
 {
   "nav": {
-    "home": "首頁",
+    "home": "主頁",
+    "articles": "專欄",
     "notes": "隨筆",
+    "timeline": "足跡",
+    "thinking": "感悟",
+    "more": "其它",
     "works": "作品",
     "about": "關於"
   },

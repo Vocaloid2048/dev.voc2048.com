@@ -1,7 +1,11 @@
 {
   "nav": {
     "home": "Home",
-    "notes": "Notes",
+    "articles": "Articles",
+    "notes": "Memos",
+    "timeline": "Timeline",
+    "thinking": "Insights",
+    "more": "More",
     "works": "Works",
     "about": "About"
   },
