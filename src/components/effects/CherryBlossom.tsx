@@ -65,7 +65,7 @@ export function CherryBlossom({
     const createPetal = (maxX: number): Petal => ({
       x: Math.random() * maxX,
       y: -20 - Math.random() * 200,
-      size: 6 + Math.random() * 8,
+      size: 14 + Math.random() * 12,
       speedY: 0.5 + Math.random() * 1.0,
       speedX: -0.3 + Math.random() * 0.6,
       rotation: Math.random() * Math.PI * 2,
@@ -77,40 +77,25 @@ export function CherryBlossom({
 
     const drawPetal = (
       ctx: CanvasRenderingContext2D,
-      petal: Petal,
-      color: string
+      petal: Petal
     ) => {
       ctx.save();
       ctx.translate(petal.x, petal.y);
       ctx.rotate(petal.rotation);
       ctx.globalAlpha = petal.opacity;
-      ctx.fillStyle = color;
-
-      // 繪製櫻花花瓣形狀 (橢圓 + 尖端)
-      ctx.beginPath();
-      ctx.ellipse(0, 0, petal.size * 0.4, petal.size, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // 花瓣尖端
-      ctx.beginPath();
-      ctx.moveTo(0, -petal.size);
-      ctx.lineTo(-petal.size * 0.2, -petal.size * 1.3);
-      ctx.lineTo(petal.size * 0.2, -petal.size * 1.3);
-      ctx.closePath();
-      ctx.fill();
+      
+      // 使用 🌸 表情符號
+      ctx.font = `${petal.size}px serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("🌸", 0, 0);
 
       ctx.restore();
-    };
-
-    const getPetalsColor = () => {
-      const theme = document.documentElement.getAttribute("data-theme");
-      return theme === "nightstar-dark" ? "rgba(242, 193, 195, 0.8)" : "rgba(242, 194, 194, 0.7)";
     };
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       time += 0.01;
-      const color = getPetalsColor();
 
       for (const petal of petals) {
         // 下落
@@ -120,7 +105,7 @@ export function CherryBlossom({
         // 旋轉
         petal.rotation += petal.rotationSpeed;
 
-        drawPetal(ctx, petal, color);
+        drawPetal(ctx, petal);
 
         // 重置花瓣 (從頂部重新生成)
         if (petal.y > canvas.height + 20) {
