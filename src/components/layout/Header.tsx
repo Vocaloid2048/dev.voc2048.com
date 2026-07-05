@@ -29,11 +29,9 @@ export function Header({ siteName, siteSlogan, adminAvatar }: HeaderProps) {
 
   const navItems = [
     { key: "home", href: "/", icon: Home },
-    { key: "articles", href: "/articles", icon: FileText },
     { key: "notes", href: "/notes", icon: PenTool },
-    { key: "timeline", href: "/timeline", icon: Clock },
-    { key: "thinking", href: "/thinking", icon: Lightbulb },
-    { key: "more", href: "/more", icon: MoreHorizontal },
+    { key: "works", href: "/works", icon: FileText },
+    { key: "about", href: "/about", icon: Lightbulb },
   ] as const;
 
   // 關閉語言選單 (點擊外部)
