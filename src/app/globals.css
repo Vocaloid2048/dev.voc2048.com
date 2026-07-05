@@ -45,6 +45,7 @@
   color-scheme: dark;
 
   --color-primary: #f2c1c3;
+  --color-primary-rgb: 242, 193, 195;
   --color-primary-content: #2a1f1f;
   --color-secondary: #8a5560;
   --color-secondary-content: #f2e0dc;
@@ -84,7 +85,7 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-base-100);
+  background-color: transparent;
   color: var(--color-base-content);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -161,6 +162,28 @@ body.has-custom-bg::before {
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 背景漸變與動態效果 */
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-flow {
+  background-size: 400% 400%;
+  animation: gradient-flow 15s ease infinite;
+}
+
+@keyframes float-blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(2%, -4%) scale(1.1); }
+  66% { transform: translate(-2%, 2%) scale(0.9); }
+}
+
+.animate-float-blob {
+  animation: float-blob 20s ease-in-out infinite;
 }
 
 /* 減少動畫偏好 */

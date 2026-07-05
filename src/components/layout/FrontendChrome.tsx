@@ -45,15 +45,15 @@ export function FrontendChrome({
   // Dashboard 路由下僅顯示背景，不顯示導航列與頁腳
   if (isDashboard) {
     return (
-      <>
+      <div className="relative z-10">
         {background}
         {children}
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="relative z-10">
       {background}
       <CherryBlossom
         count={config?.cherryBlossomCount ?? 30}
@@ -67,6 +67,6 @@ export function FrontendChrome({
       <main className="relative z-10 min-h-screen pt-20">{children}</main>
       <Footer />
       <BackToTop />
-    </>
+    </div>
   );
 }
