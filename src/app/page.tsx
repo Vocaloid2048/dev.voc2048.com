@@ -15,6 +15,12 @@ export default async function HomePage() {
   const t = await getTranslations("home");
   const config = await getSiteConfig();
 
+  // 取得管理員頭像
+  const admin = await prisma.user.findFirst({
+    where: { role: "ADMIN" },
+    select: { avatar: true },
+  });
+
   // 取得置頂作品
   const pinnedWorks = await prisma.work
     .findMany({
@@ -25,27 +31,46 @@ export default async function HomePage() {
     .catch(() => []);
 
   return (
-    <div className="mx-auto max-w-4xl px-4">
-      {/* Hero 區域 */}
-      <section className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-        <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl">
-          {config.siteName}
-        </h1>
-        <p className="mt-4 text-lg text-base-content/70 sm:text-xl">
-          {config.siteSlogan}
-        </p>
-        <p className="mt-6 max-w-2xl text-base text-base-content/60">
-          {t("intro")}
-        </p>
-      </section>
+    <div className="mx-auto max-w-6xl px-6">
+      {/* Hero 區域 - 左右佈局 */}
+      <section className="flex min-h-[80vh] flex-col-reverse items-center justify-between gap-12 py-12 lg:flex-row lg:py-0">
+        <div className="flex-1 text-left">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+              {config.heroTitle.replace("{name}", config.siteName.replace("夜芷冰的星空夜談", "Voc-夜芷冰"))}
+            </h1>
+            <p className="text-xl font-medium text-base-content/80 sm:text-2xl">
+              {config.heroJob}
+            </p>
+          </div>
+          
+          <div className="mt-8 space-y-1 opacity-60">
+            <p className="text-lg font-semibold">{config.heroSubtitle}</p>
+            <p className="text-sm font-medium uppercase tracking-widest">
+              {config.heroJob}
+            </p>
+          </div>
 
-      {/* 引言 */}
-      <section className="my-16 flex justify-center">
-        <blockquote className="relative max-w-2xl rounded-2xl border border-base-300/30 bg-base-200/30 px-8 py-6 text-center backdrop-blur-sm">
-          <p className="text-lg font-medium italic text-base-content/80">
-            「{config.siteQuote}」
-          </p>
-        </blockquote>
+          <div className="mt-16 max-w-lg border-l-2 border-primary/30 pl-6 italic text-base-content/50">
+            <p className="text-sm">
+              {config.siteQuote}
+            </p>
+          </div>
+        </div>
+
+        {/* 右側頭像 */}
+        <div className="relative flex shrink-0 items-center justify-center">
+          <div className="relative h-64 w-64 overflow-hidden rounded-full border-8 border-white/5 shadow-2xl sm:h-80 sm:w-80 lg:h-96 lg:w-96">
+            <img
+              src={admin?.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=Vocchi"}
+              alt="Avatar"
+              className="h-full w-full object-cover transition-transform duration-700 hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+          </div>
+          {/* 裝飾性光暈 */}
+          <div className="absolute -inset-4 -z-10 animate-pulse rounded-full bg-primary/10 blur-3xl" />
+        </div>
       </section>
 
       {/* 置頂作品 */}

@@ -189,6 +189,30 @@ export default function DashboardSettingsPage() {
             onChange={(v) => setConfig({ ...config, "site.quote": v })}
           />
 
+          <div className="border-t border-[var(--db-border)] pt-4 mt-4">
+            <h3 className="mb-3 text-sm font-medium text-[var(--db-text)]">Hero 區域配置</h3>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <ConfigInput
+                label="Hero 標題"
+                value={config["home.hero_title"] || ""}
+                onChange={(v) => setConfig({ ...config, "home.hero_title": v })}
+              />
+              <ConfigInput
+                label="Hero 副標題"
+                value={config["home.hero_subtitle"] || ""}
+                onChange={(v) => setConfig({ ...config, "home.hero_subtitle": v })}
+              />
+              <ConfigInput
+                label="職業描述"
+                value={config["home.hero_job"] || ""}
+                onChange={(v) => setConfig({ ...config, "home.hero_job": v })}
+              />
+            </div>
+            <p className="mt-2 text-xs text-[var(--db-text-muted)]">
+              標題中可使用 {"{name}"} 作為網站名稱的佔位符。
+            </p>
+          </div>
+
           {/* 搜尋關鍵詞 — Chip (+) 方式添加 */}
           <div>
             <label className="mb-1 block text-xs text-[var(--db-text-muted)]">搜尋關鍵詞</label>
@@ -298,7 +322,17 @@ export default function DashboardSettingsPage() {
             />
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col gap-3">
+            <label className="flex items-center gap-2 text-sm text-[var(--db-text)]">
+              <input
+                type="checkbox"
+                checked={config["effects.bg_gradient"] !== "false"}
+                onChange={(e) => setConfig({ ...config, "effects.bg_gradient": e.target.checked ? "true" : "false" })}
+                className="accent-[var(--db-primary)]"
+              />
+              背景漸變動畫（默認開啟）
+            </label>
+
             <label className="flex items-center gap-2 text-sm text-[var(--db-text)]">
               <input
                 type="checkbox"
@@ -306,7 +340,7 @@ export default function DashboardSettingsPage() {
                 onChange={(e) => setConfig({ ...config, "effects.cherry_blossom": e.target.checked ? "true" : "false" })}
                 className="accent-[var(--db-primary)]"
               />
-              櫻花動畫
+              櫻花動畫（🌸）
             </label>
           </div>
 

@@ -11,8 +11,12 @@ export interface SiteConfig {
   seoKeywords: string; // JSON array string
   favicon: string;
   background: string;
+  bgGradientEnabled: boolean;
   cherryBlossomEnabled: boolean;
   cherryBlossomCount: number;
+  heroTitle: string;
+  heroSubtitle: string;
+  heroJob: string;
 }
 
 const DEFAULTS: SiteConfig = {
@@ -22,8 +26,12 @@ const DEFAULTS: SiteConfig = {
   seoKeywords: "[]",
   favicon: "",
   background: "",
+  bgGradientEnabled: true,
   cherryBlossomEnabled: true,
   cherryBlossomCount: 30,
+  heroTitle: "你好呀~ 我係 {name} 🎸",
+  heroSubtitle: "Hello ~ I'm Vocchi",
+  heroJob: "跨平台應用程式開發者 From HK",
 };
 
 /**
@@ -46,6 +54,10 @@ export async function getSiteConfig(): Promise<SiteConfig> {
       seoKeywords: map["site.seo_keywords"] || DEFAULTS.seoKeywords,
       favicon: map["site.favicon"] || DEFAULTS.favicon,
       background: map["site.background"] || DEFAULTS.background,
+      bgGradientEnabled:
+        map["effects.bg_gradient"] !== undefined
+          ? map["effects.bg_gradient"] === "true"
+          : DEFAULTS.bgGradientEnabled,
       cherryBlossomEnabled:
         map["effects.cherry_blossom"] !== undefined
           ? map["effects.cherry_blossom"] === "true"
@@ -53,6 +65,9 @@ export async function getSiteConfig(): Promise<SiteConfig> {
       cherryBlossomCount: map["effects.cherry_blossom_count"]
         ? parseInt(map["effects.cherry_blossom_count"], 10)
         : DEFAULTS.cherryBlossomCount,
+      heroTitle: map["home.hero_title"] || DEFAULTS.heroTitle,
+      heroSubtitle: map["home.hero_subtitle"] || DEFAULTS.heroSubtitle,
+      heroJob: map["home.hero_job"] || DEFAULTS.heroJob,
     };
   } catch {
     return DEFAULTS;
@@ -71,7 +86,11 @@ export function siteConfigToMap(config: SiteConfig): Record<string, string> {
     "site.seo_keywords": config.seoKeywords,
     "site.favicon": config.favicon,
     "site.background": config.background,
+    "effects.bg_gradient": config.bgGradientEnabled ? "true" : "false",
     "effects.cherry_blossom": config.cherryBlossomEnabled ? "true" : "false",
     "effects.cherry_blossom_count": String(config.cherryBlossomCount),
+    "home.hero_title": config.heroTitle,
+    "home.hero_subtitle": config.heroSubtitle,
+    "home.hero_job": config.heroJob,
   };
 }
