@@ -18,11 +18,14 @@ export interface SiteConfig {
   heroTitle: string;
   heroSubtitle: string;
   heroJob: string;
+  homeIntro: string;
+  aboutBio: string;
 }
 
 const DEFAULTS: SiteConfig = {
   siteName: "夜芷冰的星空夜談",
   siteSlogan: "變量為何要羨慕常數？",
+  nameDisplay: "夜芷冰",
   siteQuote: "讓冷冰冰的軟體，跳出窩心的溫度",
   seoKeywords: "[]",
   favicon: "",
@@ -33,6 +36,8 @@ const DEFAULTS: SiteConfig = {
   heroTitle: "你好呀~ 我係 {name} 🎸",
   heroSubtitle: "Hello ~ I'm Vocchi",
   heroJob: "跨平台應用程式開發者 From HK",
+  homeIntro: "# 你好呀~ 我係 {name} 🎸\n### 跨平台應用程式開發者 From HK\n\nHello ~ I'm Vocchi",
+  aboutBio: "",
 };
 
 /**
@@ -70,6 +75,7 @@ export async function getSiteConfig(): Promise<SiteConfig> {
       heroTitle: map["home.hero_title"] || DEFAULTS.heroTitle,
       heroSubtitle: map["home.hero_subtitle"] || DEFAULTS.heroSubtitle,
       heroJob: map["home.hero_job"] || DEFAULTS.heroJob,
+      homeIntro: map["home.intro"] || DEFAULTS.homeIntro,
       aboutBio: map["about.bio"] || DEFAULTS.aboutBio,
     };
   } catch {
@@ -95,6 +101,7 @@ export function siteConfigToMap(config: SiteConfig): Record<string, string> {
     "home.hero_title": config.heroTitle,
     "home.hero_subtitle": config.heroSubtitle,
     "home.hero_job": config.heroJob,
+    "home.intro": config.homeIntro,
     "about.bio": config.aboutBio,
   };
 }
