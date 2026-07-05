@@ -3,10 +3,13 @@
  * About page — personal bio, skills stack, contact info.
  */
 import { getLocale, getTranslations } from "next-intl/server";
+import { getSiteConfig } from "@/lib/siteConfig";
+import { MarkdownRenderer } from "@/components/notes/MarkdownRenderer";
 
 export default async function AboutPage() {
   const locale = await getLocale();
   const t = await getTranslations("about");
+  const config = await getSiteConfig();
 
   const skills = [
     { category: "Frontend", items: ["TypeScript", "React", "Next.js", "TailwindCSS", "Vue"] },
@@ -29,11 +32,15 @@ export default async function AboutPage() {
           {t("bio")}
         </h2>
         <div className="rounded-2xl border border-base-300/30 bg-base-200/20 p-6">
-          <p className="leading-relaxed text-base-content/70">
-            {locale === "zh-TW"
-              ? "你好，我是夜芷冰。一名在程式碼星空下探索的開發者，相信好的軟體不只是冷冰冰的邏輯，更是傳遞溫度的媒介。在變量與常數之間，尋找讓世界更溫暖的解。"
-              : "Hello, I'm Night Zhi Bing. A developer exploring under the starry sky of code, believing that good software is not just cold logic but a medium for conveying warmth. Finding solutions that make the world warmer, between variables and constants."}
-          </p>
+          {config.aboutBio ? (
+            <MarkdownRenderer content={config.aboutBio} />
+          ) : (
+            <p className="leading-relaxed text-base-content/70">
+              {locale === "zh-TW"
+                ? "你好，我是夜芷冰。一名在程式碼星空下探索的開發者，相信好的軟體不只是冷冰冰的邏輯，更是傳遞溫度的媒介。在變量與常數之間，尋找讓世界更溫暖的解。"
+                : "Hello, I'm Night Zhi Bing. A developer exploring under the starry sky of code, believing that good software is not just cold logic but a medium for conveying warmth. Finding solutions that make the world warmer, between variables and constants."}
+            </p>
+          )}
         </div>
       </section>
 

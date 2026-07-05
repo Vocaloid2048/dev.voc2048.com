@@ -10,16 +10,15 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { getSiteConfig } from "@/lib/siteConfig";
+import { MarkdownRenderer } from "@/components/notes/MarkdownRenderer";
 
 export default async function HomePage() {
   const t = await getTranslations("home");
   const config = await getSiteConfig();
 
-  // 處理文本替換與 HTML 渲染
+  // 處理文本替換
   const processText = (text: string) => {
-    return text
-      .replace(/\{name\}|<name_display>/g, config.nameDisplay)
-      .replace(/\n/g, "<br/>");
+    return text.replace(/\{name\}|<name_display>/g, config.nameDisplay);
   };
 
   // 取得管理員頭像
@@ -42,32 +41,32 @@ export default async function HomePage() {
       {/* Hero 區域 - 左右佈局 */}
       <section className="flex min-h-[80vh] flex-col-reverse items-center justify-between gap-12 py-12 lg:flex-row lg:py-0">
         <div className="flex-1 text-left">
-          <div className="space-y-2">
-            <h1 
-              className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
-              dangerouslySetInnerHTML={{ __html: processText(config.heroTitle) }}
+          <div className="space-y-4">
+            <MarkdownRenderer 
+              content={processText(config.heroTitle)} 
+              className="prose-h1:text-3xl prose-h1:font-bold prose-h1:tracking-tight sm:prose-h1:text-4xl md:prose-h1:text-5xl prose-p:text-3xl prose-p:font-bold md:prose-p:text-5xl"
             />
-            <p 
-              className="text-xl font-medium text-base-content/80 sm:text-2xl"
-              dangerouslySetInnerHTML={{ __html: processText(config.heroJob) }}
+            <MarkdownRenderer 
+              content={processText(config.heroJob)} 
+              className="prose-p:text-xl prose-p:font-medium prose-p:text-base-content/80 sm:prose-p:text-2xl"
             />
           </div>
           
           <div className="mt-8 space-y-1 opacity-60">
-            <p 
-              className="text-lg font-semibold"
-              dangerouslySetInnerHTML={{ __html: processText(config.heroSubtitle) }}
+            <MarkdownRenderer 
+              content={processText(config.heroSubtitle)} 
+              className="prose-p:text-lg prose-p:font-semibold"
             />
-            <p 
-              className="text-sm font-medium uppercase tracking-widest"
-              dangerouslySetInnerHTML={{ __html: processText(config.heroJob) }}
+            <MarkdownRenderer 
+              content={processText(config.heroJob)} 
+              className="hidden" 
             />
           </div>
 
           <div className="mt-16 max-w-lg border-l-2 border-primary/30 pl-6 italic text-base-content/50">
-            <p 
-              className="text-sm"
-              dangerouslySetInnerHTML={{ __html: processText(config.siteQuote) }}
+            <MarkdownRenderer 
+              content={processText(config.siteQuote)} 
+              className="prose-p:text-sm"
             />
           </div>
         </div>
