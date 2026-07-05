@@ -12,9 +12,14 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BackToTop } from "@/components/layout/BackToTop";
 import { CherryBlossom } from "@/components/effects/CherryBlossom";
+import { BackgroundGradient } from "@/components/effects/BackgroundGradient";
 
 interface SiteConfigData {
+  siteName?: string;
+  siteSlogan?: string;
+  adminAvatar?: string;
   background?: string;
+  bgGradientEnabled?: boolean;
   cherryBlossomEnabled?: boolean;
   cherryBlossomCount?: number;
 }
@@ -27,19 +32,38 @@ export function FrontendChrome({
   config?: SiteConfigData;
 }) {
   const pathname = usePathname();
+  const isDashboard = pathname?.startsWith("/dashboard");
 
-  // Dashboard 路由下不顯示前端元素
-  if (pathname?.startsWith("/dashboard")) {
-    return <>{children}</>;
+  // 背景組件應在所有頁面渲染
+  const background = (
+    <BackgroundGradient 
+      enabled={config?.bgGradientEnabled ?? true} 
+      hasBackground={!!config?.background}
+    />
+  );
+
+  // Dashboard 路由下僅顯示背景，不顯示導航列與頁腳
+  if (isDashboard) {
+    return (
+      <>
+        {background}
+        {children}
+      </>
+    );
   }
 
   return (
     <>
+      {background}
       <CherryBlossom
         count={config?.cherryBlossomCount ?? 30}
         enabled={config?.cherryBlossomEnabled ?? true}
       />
-      <Header />
+      <Header 
+        siteName={config?.siteName} 
+        siteSlogan={config?.siteSlogan} 
+        adminAvatar={config?.adminAvatar}
+      />
       <main className="relative z-10 min-h-screen pt-20">{children}</main>
       <Footer />
       <BackToTop />

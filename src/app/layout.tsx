@@ -3,6 +3,7 @@ import { getLocale, getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { FrontendChrome } from "@/components/layout/FrontendChrome";
+import { prisma } from "@/lib/prisma";
 import { getSiteConfig } from "@/lib/siteConfig";
 import "./globals.css";
 
@@ -38,6 +39,12 @@ export default async function RootLayout({
   const messages = await getMessages();
   const config = await getSiteConfig();
 
+  // 取得管理員頭像以在 Header 顯示
+  const admin = await prisma.user.findFirst({
+    where: { role: "ADMIN" },
+    select: { avatar: true },
+  });
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body>
@@ -50,19 +57,23 @@ export default async function RootLayout({
                   content: "";
                   position: fixed;
                   inset: 0;
-                  z-index: -2;
-                  background-image: url(${config.background});
+                  z-index: 2;
+                  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${config.background});
                   background-size: cover;
                   background-position: center;
                   background-attachment: fixed;
-                  opacity: 0.15;
+                  opacity: 0.8;
                   pointer-events: none;
                 }
               `}</style>
             )}
             <FrontendChrome
               config={{
+                siteName: config.siteName,
+                siteSlogan: config.siteSlogan,
+                adminAvatar: admin?.avatar || undefined,
                 background: config.background,
+                bgGradientEnabled: config.bgGradientEnabled,
                 cherryBlossomEnabled: config.cherryBlossomEnabled,
                 cherryBlossomCount: config.cherryBlossomCount,
               }}
