@@ -106,51 +106,26 @@ export default function DashboardInfoPage() {
       <section className="dashboard-card p-6">
         <div className="mb-4 flex items-center gap-2">
           <Info size={18} className="text-[var(--db-primary)]" />
-          <h2 className="text-lg font-semibold text-[var(--db-text)]">首頁簡介 (Hero)</h2>
+          <h2 className="text-lg font-semibold text-[var(--db-text)]">首頁簡介 (Home Intro)</h2>
         </div>
         
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="space-y-6">
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-[var(--db-text-muted)] uppercase tracking-wider">
-                Hero 標題
-              </label>
-              <div data-color-mode="dark">
-                <MDEditor
-                  value={config["home.hero_title"] || ""}
-                  onChange={(v) => setConfig({ ...config, "home.hero_title": v || "" })}
-                  preview="edit"
-                  height={150}
-                />
-              </div>
+          <div className="space-y-4">
+            <div data-color-mode="dark">
+              <MDEditor
+                value={config["home.intro"] || ""}
+                onChange={(v) => setConfig({ ...config, "home.intro": v || "" })}
+                height={400}
+              />
             </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-[var(--db-text-muted)] uppercase tracking-wider">
-                Hero 副標題
-              </label>
-              <div data-color-mode="dark">
-                <MDEditor
-                  value={config["home.hero_subtitle"] || ""}
-                  onChange={(v) => setConfig({ ...config, "home.hero_subtitle": v || "" })}
-                  preview="edit"
-                  height={120}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-[var(--db-text-muted)] uppercase tracking-wider">
-                職業描述 (Hero Job)
-              </label>
-              <div data-color-mode="dark">
-                <MDEditor
-                  value={config["home.hero_job"] || ""}
-                  onChange={(v) => setConfig({ ...config, "home.hero_job": v || "" })}
-                  preview="edit"
-                  height={120}
-                />
-              </div>
+            <div className="rounded-lg bg-info/10 p-3 text-[10px] text-[var(--db-text-muted)]">
+              <p className="font-bold mb-1 opacity-80">排版建議：</p>
+              <ul className="list-disc pl-4 space-y-0.5">
+                <li>使用 <code># 標題</code> 作為大標題</li>
+                <li>使用 <code>### 職業描述</code> 作為次級標題</li>
+                <li>一般文字將作為副標題說明</li>
+                <li>支援 <code>&lt;row&gt;</code> 與 <code>&lt;chip&gt;</code> 標籤</li>
+              </ul>
             </div>
           </div>
 
@@ -160,21 +135,13 @@ export default function DashboardInfoPage() {
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-[var(--db-text-muted)]">Live Preview</h4>
             </div>
             <div className="flex-1 p-8 bg-[#F2EFDF] dark:bg-[#2a1f1f] text-[#733232] dark:text-[#f2e0dc]">
-              <div className="space-y-4">
+              <div className="hero-preview">
                 <MarkdownRenderer 
-                  content={config["home.hero_title"] || ""} 
-                  className="prose-h1:text-4xl prose-h1:font-bold prose-p:text-4xl prose-p:font-bold"
+                  content={(config["home.intro"] || "")
+                    .replace(/\{name\}|<name_display>/g, config["site.name_display"] || config["site.name"] || "Name")
+                  } 
+                  className="prose-h1:text-3xl prose-h1:font-bold prose-h1:mb-2 sm:prose-h1:text-4xl md:prose-h1:text-5xl prose-h3:text-xl prose-h3:font-medium prose-h3:mt-0 prose-p:text-lg prose-p:opacity-70"
                 />
-                <MarkdownRenderer 
-                  content={config["home.hero_job"] || ""} 
-                  className="prose-p:text-2xl prose-p:font-medium opacity-80"
-                />
-                <div className="mt-8 opacity-60">
-                  <MarkdownRenderer 
-                    content={config["home.hero_subtitle"] || ""} 
-                    className="prose-p:text-lg prose-p:font-semibold"
-                  />
-                </div>
               </div>
             </div>
           </div>
