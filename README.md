@@ -81,6 +81,7 @@ docker exec nightstar-app npx tsx prisma/seed.ts
 ### 後台
 - JWT 認證 (帳號密碼)
 - 儀表盤: PV 趨勢、訪客 IP、世界熱力圖、系統日誌
+- 資訊設定: GUI 式 (Markdown) 編輯首頁簡介與個人簡介
 - 筆記管理: Markdown 編輯器 CRUD
 - 作品管理: CRUD + 封面上傳
 - 檔案管理: 圖片/檔案上傳
