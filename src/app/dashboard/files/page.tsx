@@ -96,7 +96,7 @@ export default function DashboardFilesPage() {
           {files.map((file) => (
             <div key={file.id} className="dashboard-card overflow-hidden">
               {/* 預覽 */}
-              <div className="flex h-32 items-center justify-center bg-[rgba(242,193,195,0.05)]">
+              <div className="flex h-32 items-center justify-center bg-[var(--db-table-header)]">
                 {isImage(file.mimeType) ? (
                   <img
                     src={file.url}

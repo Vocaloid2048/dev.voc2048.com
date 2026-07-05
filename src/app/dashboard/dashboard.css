@@ -27,8 +27,9 @@
   );
 }
 
-/* ===== 後台配色（強制深色） ===== */
+/* ===== 後台配色（支援淺色/深色） ===== */
 .dashboard-root {
+  /* 預設深色 (nightstar-dark) */
   --db-bg: #1a1515;
   --db-surface: #231a1a;
   --db-surface-hover: #2a1f1f;
@@ -39,16 +40,39 @@
   --db-primary-muted: rgba(242, 193, 195, 0.15);
   --db-error: #c97a7a;
   --db-success: #8CB99A;
+  --db-btn-text: #2a1f1f;
+  --db-table-header: rgba(242, 193, 195, 0.05);
 
   color: var(--db-text);
   background: transparent;
 }
 
+/* 淺色模式覆蓋 (nightstar-light) */
+[data-theme="nightstar-light"] .dashboard-root {
+  --db-bg: #F2EFDF;
+  --db-surface: #F2E0DC;
+  --db-surface-hover: #E8D5D0;
+  --db-border: rgba(115, 50, 50, 0.12);
+  --db-text: #733232;
+  --db-text-muted: rgba(115, 50, 50, 0.55);
+  --db-primary: #D99AA5;
+  --db-primary-muted: rgba(217, 154, 165, 0.15);
+  --db-error: #C97A7A;
+  --db-success: #8CB99A;
+  --db-btn-text: #F2EFDF;
+  --db-table-header: rgba(115, 50, 50, 0.05);
+}
+
 /* ===== 後台側邊欄 ===== */
 .dashboard-sidebar {
-  background: rgba(35, 26, 26, 0.6);
+  background: var(--db-surface);
+  opacity: 0.95;
   backdrop-filter: blur(12px);
   border-right: 1px solid var(--db-border);
+}
+
+[data-theme="nightstar-dark"] .dashboard-sidebar {
+  background: rgba(35, 26, 26, 0.6);
 }
 
 .dashboard-nav-item {
@@ -57,7 +81,7 @@
 }
 
 .dashboard-nav-item:hover {
-  background: rgba(242, 193, 195, 0.08);
+  background: var(--db-primary-muted);
   color: var(--db-text);
 }
 
@@ -69,23 +93,33 @@
 
 /* ===== 後台卡片 ===== */
 .dashboard-card {
-  background: rgba(35, 26, 26, 0.5);
+  background: var(--db-surface);
+  opacity: 0.8;
   border: 1px solid var(--db-border);
   backdrop-filter: blur(8px);
   border-radius: 1rem;
 }
 
+[data-theme="nightstar-dark"] .dashboard-card {
+  background: rgba(35, 26, 26, 0.5);
+}
+
 .dashboard-card:hover {
-  border-color: rgba(242, 193, 195, 0.25);
+  border-color: var(--db-primary);
 }
 
 /* ===== 後台表單 ===== */
 .dashboard-input {
-  background: rgba(26, 21, 21, 0.6);
+  background: var(--db-bg);
+  opacity: 0.8;
   border: 1px solid var(--db-border);
   color: var(--db-text);
   border-radius: 0.75rem;
   transition: border-color 0.2s ease;
+}
+
+[data-theme="nightstar-dark"] .dashboard-input {
+  background: rgba(26, 21, 21, 0.6);
 }
 
 .dashboard-input:focus {
@@ -94,13 +128,13 @@
 }
 
 .dashboard-input::placeholder {
-  color: rgba(242, 224, 220, 0.3);
+  color: var(--db-text-muted);
 }
 
 /* ===== 後台按鈕 ===== */
 .dashboard-btn-primary {
   background: var(--db-primary);
-  color: #2a1f1f;
+  color: var(--db-btn-text);
   border-radius: 0.75rem;
   font-weight: 500;
   transition: opacity 0.2s ease;
@@ -128,6 +162,10 @@
 }
 
 /* ===== 後台表格 ===== */
+.dashboard-table thead {
+  background: var(--db-table-header);
+}
+
 .dashboard-table th {
   color: var(--db-text-muted);
   font-weight: 500;
@@ -138,6 +176,10 @@
 
 .dashboard-table td {
   border-top: 1px solid var(--db-border);
+}
+
+.dashboard-table tr:hover {
+  background: var(--db-primary-muted);
 }
 
 /* ===== 側邊欄導航捲動區 ===== */
@@ -185,7 +227,7 @@
 
 .dashboard-lang-switch button.active {
   background: var(--db-primary);
-  color: #2a1f1f;
+  color: var(--db-btn-text);
   font-weight: 500;
 }
 

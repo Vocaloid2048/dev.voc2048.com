@@ -80,7 +80,7 @@ export default function DashboardWorksPage() {
             <div key={work.id} className="dashboard-card overflow-hidden">
               {/* 封面圖 */}
               {work.coverImage && (
-                <div className="aspect-video overflow-hidden bg-[rgba(242,193,195,0.05)]">
+                <div className="aspect-video overflow-hidden bg-[var(--db-table-header)]">
                   <img
                     src={work.coverImage}
                     alt={work.title}

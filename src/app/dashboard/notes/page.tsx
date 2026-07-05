@@ -116,7 +116,7 @@ export default function DashboardNotesPage() {
       ) : (
         <div className="dashboard-card overflow-hidden">
           <table className="dashboard-table w-full text-sm">
-            <thead className="bg-[rgba(242,193,195,0.05)]">
+            <thead>
               <tr>
                 <th className="px-4 py-2 text-left">標題</th>
                 <th className="px-4 py-2 text-left">類型</th>

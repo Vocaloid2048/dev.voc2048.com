@@ -61,7 +61,7 @@ export default async function DashboardPage() {
         </h2>
         <div className="dashboard-card overflow-hidden">
           <table className="dashboard-table w-full text-sm">
-            <thead className="bg-[rgba(242,193,195,0.05)]">
+            <thead>
               <tr>
                 <th className="px-4 py-2 text-left">IP</th>
                 <th className="px-4 py-2 text-left">路徑</th>
@@ -102,7 +102,7 @@ export default async function DashboardPage() {
         </h2>
         <div className="dashboard-card overflow-hidden">
           <table className="dashboard-table w-full text-sm">
-            <thead className="bg-[rgba(242,193,195,0.05)]">
+            <thead>
               <tr>
                 <th className="px-4 py-2 text-left">備份名稱</th>
                 <th className="px-4 py-2 text-left">大小</th>

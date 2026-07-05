@@ -272,8 +272,8 @@ export default function DashboardInfoPage() {
           </div>
 
           {/* 預覽區 */}
-          <div className="flex flex-col rounded-xl border border-[var(--db-border)] bg-black/20 overflow-hidden">
-            <div className="border-b border-[var(--db-border)] bg-white/5 px-4 py-2">
+          <div className="flex flex-col rounded-xl border border-[var(--db-border)] bg-base-300/10 overflow-hidden">
+            <div className="border-b border-[var(--db-border)] bg-base-200/50 px-4 py-2">
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-[var(--db-text-muted)]">Live Preview</h4>
             </div>
             <div className="flex-1 p-8 bg-[#F2EFDF] dark:bg-[#2a1f1f] text-[#733232] dark:text-[#f2e0dc]">
@@ -341,8 +341,8 @@ export default function DashboardInfoPage() {
             />
           </div>
 
-          <div className="flex flex-col rounded-xl border border-[var(--db-border)] bg-black/20 overflow-hidden">
-            <div className="border-b border-[var(--db-border)] bg-white/5 px-4 py-2">
+          <div className="flex flex-col rounded-xl border border-[var(--db-border)] bg-base-300/10 overflow-hidden">
+            <div className="border-b border-[var(--db-border)] bg-base-200/50 px-4 py-2">
               <h4 className="text-[10px] font-bold uppercase tracking-widest text-[var(--db-text-muted)]">Live Preview</h4>
             </div>
             <div className="flex-1 overflow-y-auto p-8 bg-[#F2EFDF] dark:bg-[#2a1f1f] text-[#733232] dark:text-[#f2e0dc]">
