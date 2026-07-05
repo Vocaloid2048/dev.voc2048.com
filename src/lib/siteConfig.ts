@@ -70,6 +70,7 @@ export async function getSiteConfig(): Promise<SiteConfig> {
       heroTitle: map["home.hero_title"] || DEFAULTS.heroTitle,
       heroSubtitle: map["home.hero_subtitle"] || DEFAULTS.heroSubtitle,
       heroJob: map["home.hero_job"] || DEFAULTS.heroJob,
+      aboutBio: map["about.bio"] || DEFAULTS.aboutBio,
     };
   } catch {
     return DEFAULTS;
@@ -94,5 +95,6 @@ export function siteConfigToMap(config: SiteConfig): Record<string, string> {
     "home.hero_title": config.heroTitle,
     "home.hero_subtitle": config.heroSubtitle,
     "home.hero_job": config.heroJob,
+    "about.bio": config.aboutBio,
   };
 }
